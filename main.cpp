@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -27,21 +28,23 @@ string *extractJobDescription(string filteredFileContents[11000], string filepat
 {
     string buffer;
     int count = 0;
+    bool ignoreFirst = false;
 
     ifstream fileContents(filepath);
     while (getline(fileContents, buffer))
     {
-        buffer = trimCsvContents(buffer);
-        filteredFileContents[count] = buffer;
-        count = count + 1;
+        if(ignoreFirst == true)
+        {
+            buffer = trimCsvContents(buffer);
+            filteredFileContents[count] = buffer;
+            count = count + 1;
+        }
+        ignoreFirst = true;
     }
     return filteredFileContents;
 }
 
-int keywordCounter()
-{
 
-}
 
 int main()
 {
@@ -60,6 +63,42 @@ int main()
     {
         cout << listOfFilteredResume[i] << endl;
     }
+
+    int maxEntries = 1;
+    for(string string : listOfFilteredResume) //find max entries
+    {
+        int tempMaxEntries = 1;
+        for(char character : string)
+        {
+            if(character == ',')
+            {
+                tempMaxEntries = tempMaxEntries + 1;
+            }
+        }
+        if(tempMaxEntries > maxEntries)
+        {
+            maxEntries = tempMaxEntries;
+        }
+    }
+    for(string string : listOfFilteredJobDescription) //find max entries
+    {
+        int tempMaxEntries = 1;
+        for(char character : string)
+        {
+            if(character == ',')
+            {
+                tempMaxEntries = tempMaxEntries + 1;
+            }
+        }
+        if(tempMaxEntries > maxEntries)
+        {
+            maxEntries = tempMaxEntries;
+        }
+    }
+
+    string listOfFilteredAndSplitJobDescription[11000][maxEntries];
+    string listOfFilteredAndSplitResume[11000][maxEntries];
+    for()
 
     cout << "Job Matching System\n1. Top 10 best-matched jobs (Rule-based)\n2. Top 10 worst-matched jobs (Rule-based)\n3. Filter jobs for a resume (Rule-based)\n4. Screen reumes for a job (Rule-based)\n5. Boolean search for jobs\n6. Boolean search for resumes\n7. Show all keywords\n8. Add new keyword\n9. Show invalid resumes\n10. Exit\nEnter your choice: ";
     int choice;
