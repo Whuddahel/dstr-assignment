@@ -44,7 +44,28 @@ string *extractJobDescription(string filteredFileContents[11000], string filepat
     return filteredFileContents;
 }
 
+string* split(string& inputText, string outputText[], char delimiter)
+{
+    int index = 0;
+    string buffer = "";
 
+    for(char character : inputText)
+    {
+        if(character == delimiter)
+        {
+            outputText[index] = buffer;
+            index = index + 1;
+            buffer = "";
+        }
+        else
+        {
+            buffer = buffer + character;
+        }
+    }
+
+    outputText[index] = buffer;
+    return outputText;
+}
 
 int main()
 {
@@ -55,14 +76,7 @@ int main()
     cout << "Trimmed Resume Requirements: " << endl;
     extractJobDescription(listOfFilteredResume, "resume.csv");
 
-    for (int i = 0; i < 10; i++)
-    {
-        cout << listOfFilteredJobDescription[i] << endl;
-    }
-    for (int i = 0; i < 10; i++)
-    {
-        cout << listOfFilteredResume[i] << endl;
-    }
+
 
     int maxEntries = 1;
     for(string string : listOfFilteredResume) //find max entries
@@ -96,9 +110,20 @@ int main()
         }
     }
 
-    string listOfFilteredAndSplitJobDescription[11000][maxEntries];
-    string listOfFilteredAndSplitResume[11000][maxEntries];
-    for()
+
+    string listOfFilteredAndSplitJobDescription[11000][maxEntries] = {};
+    string listOfFilteredAndSplitResume[11000][maxEntries] = {};
+
+
+    for(int i = 0; i < 10; i++)
+    {
+        cout << listOfFilteredJobDescription[i] << endl;
+    }
+    for(int i = 0; i < 10; i++)
+    {
+        cout << listOfFilteredResume[i] << endl;
+    }
+
 
     cout << "Job Matching System\n1. Top 10 best-matched jobs (Rule-based)\n2. Top 10 worst-matched jobs (Rule-based)\n3. Filter jobs for a resume (Rule-based)\n4. Screen reumes for a job (Rule-based)\n5. Boolean search for jobs\n6. Boolean search for resumes\n7. Show all keywords\n8. Add new keyword\n9. Show invalid resumes\n10. Exit\nEnter your choice: ";
     int choice;
