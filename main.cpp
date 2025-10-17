@@ -15,7 +15,7 @@ void clearSearchContainer()
 {
     for(int i = 0; i < 11000; i++)
     {
-        searchContainer[i][0] = NULL;
+        searchContainer[i][0] = -1;
         searchContainer[i][1] = 0;
     }
 }
@@ -125,7 +125,7 @@ void helpResumeFindJob()
 
 
     int count2 = 0;
-    for(int i = 0; searchContainer[i][0] != NULL; i++)
+    for(int i = 0; searchContainer[i][0] != -1; i++)
     {
         count2 = count2 + 1;
     }
