@@ -88,7 +88,14 @@ void helpResumeFindJob()
     cout << "Select resume: " << endl;
     int input = 0;
     cin >> input;
-    int count = 0;
+    if(input < 2)
+    {
+        input = 0;
+    }
+    else
+    {
+        input = input - 2;
+    }
 
     // for(string skill: listOfFilteredAndSplitResume[input]) //per skill
     // {
@@ -158,13 +165,14 @@ void helpResumeFindJob()
     }
 
 
-    for(int i = 0; i < 100; i++)
-    {
-        cout << searchContainer[i][0] << endl;
-        cout << searchContainer[i][1] << endl;
-    }
+    // for(int i = 0; i < 100; i++)
+    // {
+    //     cout << searchContainer[i][0] << endl;
+    //     cout << searchContainer[i][1] << endl;
+    // }
 
-
+    cout << "The given resume" << endl;
+    cout << listOfFilteredResume[input] << endl;
     cout << "Search result:" << endl;
     for(int i = 0; i < 10; i++)
     {
