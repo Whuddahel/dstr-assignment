@@ -112,7 +112,6 @@ void helpResumeFindJob()
     //     }
     // }
 
-
     for(int i = 0; listOfFilteredAndSplitJobDescription[i][0] != "" ; i++) //repeat for each job
     {
         int matchingScore = 0;
