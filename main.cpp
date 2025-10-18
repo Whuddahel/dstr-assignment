@@ -378,7 +378,7 @@ void addKeywords()
     fileContents << keywordInput << ", " << keywordType << endl;
     fileContents.close();
 
-    clearSearchContainer();
+    clearListOfKeywords();
     extractKeywords(listOfKeywords, "keywords.csv");
     for(int i = 0; listOfKeywords[i] != ""; i++)
     {
@@ -387,7 +387,41 @@ void addKeywords()
     }
 }
 
+void displayInvalidResumes()
+{
+    clearSearchContainer();
+    int addIndex = 0;
+    for(int i = 0; listOfFilteredAndSplitResume[i][0] != ""; i ++) //for each resume
+    {
+        int valid = 0;
+        for(int j = 0; listOfSplitKeywords[j][0] != ""; j++) //for each keyword in existence
+        {
+            for(int k = 0; listOfFilteredAndSplitResume[i][k] != ""; k++) //for each skill in resume
+            {
+                if(listOfFilteredAndSplitResume[i][k] == listOfSplitKeywords[j][0])
+                {
+                    valid = 1;
+                    break;
+                }
+            }
+        }
+        if(valid == 0)
+        {
+            searchContainer[addIndex][0] = i; //this resume's id is the id
+            searchContainer[addIndex][1] = 0; //just placeholder
+            addIndex = addIndex + 1;
+        }
+    }
 
+    cout << "Invalid resumes that serve no particular skills needed in this modern technology driven society" << endl;
+    for(int i = 0; searchContainer[i][0] != -1; i ++)
+    {
+        cout << i+1 << ". "<< endl;
+        cout << "The resume in question: " << endl;
+        cout << listOfFilteredResume[searchContainer[i][0]] << endl;
+        cout << "Resume ID: " << searchContainer[i][0]+2 << endl;
+    }
+}
 
 int main()
 {
@@ -499,6 +533,10 @@ int main()
         else if(choice == 8)
         {
             addKeywords();
+        }
+        else if(choice == 9)
+        {
+            displayInvalidResumes();
         }
         else if(choice == 10)
         {
