@@ -333,7 +333,7 @@ void searchKeywordInJobs()
     clearSearchContainer();
     string userInputs[9] = {""}; //one more so can use that blank place as cutoff ""
     cout << "Enter your keywords (Enter , to stop): ";
-    for(int i; i < 8; i++)
+    for(int i = 0; i < 8; i++)
     {
         cin >> userInputs[i];
         if(userInputs[i] == ",")
@@ -433,7 +433,7 @@ void searchKeywordInResumes()
     clearSearchContainer();
     string userInputs[9] = {""}; //one more so can use that blank place as cutoff ""
     cout << "Enter your keywords (Enter , to stop): ";
-    for(int i; i < 8; i++)
+    for(int i = 0; i < 8; i++)
     {
         cin >> userInputs[i];
         if(userInputs[i] == ",")
