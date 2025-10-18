@@ -393,7 +393,7 @@ void searchKeywordInJobs()
 
 
     int resumeSkillCount = 0;
-    for(int i = 0; userInputs[i] != "" ; i++) //count resume skills
+    for(int i = 0; userInputs[i] != "" ; i++) //count entered skills
     {
         resumeSkillCount++;
     }
@@ -425,6 +425,106 @@ void searchKeywordInJobs()
         cout << listOfFilteredJobDescription[searchContainer[i][0]] << endl;
         cout << "Score: " << searchContainer[i][1] << "/" << resumeSkillCount << endl;
         cout << "Job ID: " << searchContainer[i][0]+2 << endl;
+    }
+}
+
+void searchKeywordInResumes()
+{
+    clearSearchContainer();
+    string userInputs[9] = {""}; //one more so can use that blank place as cutoff ""
+    cout << "Enter your keywords (Enter , to stop): ";
+    for(int i; i < 8; i++)
+    {
+        cin >> userInputs[i];
+        if(userInputs[i] == ",")
+        {
+            userInputs[i] = "";
+            break;
+        }
+        // if(userInputs[i].find(',') != string::npos)
+        // {
+        //     cout << "You have a comma!" << endl; //idk why i add this just an instinct
+        //     return;
+        // }
+    }
+
+    if(userInputs[0] == "")
+    {
+        cout << "You entered nothing!" << endl;
+        return;
+    }
+
+    for(int i = 0; listOfFilteredAndSplitResume[i][0] != "" ; i++) //repeat for each resume
+    {
+        int matchingScore = 0;
+        for(int j = 0; userInputs[j] != "" ; j++) //across each entered skill
+        {
+            for(int k = 0; listOfFilteredAndSplitResume[i][k] != ""; k++) //across each current resume's skill
+            {
+                if(userInputs[j] == listOfFilteredAndSplitResume[i][k])
+                {
+                    matchingScore++;
+                    break;
+                }
+            }
+        }
+        searchContainer[i][0] = i;
+        searchContainer[i][1] = matchingScore;
+    }
+
+    int count2 = 0;
+    for(int i = 0; searchContainer[i][0] != -1; i++)
+    {
+        count2 = count2 + 1;
+    }
+
+    for (int i = 0; i < count2 - 1; i++)
+    {
+        for (int j = i + 1; j < count2; j++)
+        {
+            if (searchContainer[j][1] > searchContainer[i][1])
+            {
+                swap(searchContainer[j][0], searchContainer[i][0]);
+                swap(searchContainer[j][1], searchContainer[i][1]);
+            }
+        }
+    }
+
+
+
+    int resumeSkillCount = 0;
+    for(int i = 0; userInputs[i] != "" ; i++) //count entered skills
+    {
+        resumeSkillCount++;
+    }
+    if(resumeSkillCount > 8)
+    {
+        resumeSkillCount = 8;
+    }
+
+    cout << "The given list of requirements" << endl;
+    for(int i = 0; userInputs[i] != ""; i++)
+    {
+        cout << userInputs[i];
+        if(userInputs[i+1] != "")
+        {
+            cout << ", ";
+        }
+    }
+    cout << endl;
+    cout << "Search result:" << endl;
+    for(int i = 0; i < 10; i++)
+    {
+        if(searchContainer[i][1] == 0)
+        {
+            cout << "No more matches" << endl;
+            break;
+        }
+        cout << i+1 << ". " << endl;
+        cout << "The resume in question: " << endl;
+        cout << listOfFilteredResume[searchContainer[i][0]] << endl;
+        cout << "Score: " << searchContainer[i][1] << "/" << resumeSkillCount << endl;
+        cout << "Resume ID: " << searchContainer[i][0]+2 << endl;
     }
 }
 
@@ -639,6 +739,10 @@ int main()
         else if(choice == 5)
         {
             searchKeywordInJobs();
+        }
+        else if(choice == 6)
+        {
+            searchKeywordInResumes();
         }
         else if(choice == 7)
         {
