@@ -22,6 +22,18 @@ void clearSearchContainer()
     }
 }
 
+void clearListOfKeywords()
+{
+    for(int i = 0; i < 100; i++)
+    {
+        listOfKeywords[i] = "";
+        for(int j = 0; j < 2; j++)
+        {
+            listOfSplitKeywords[i][j] = "";
+        }
+    }
+}
+
 
 string trimCsvContents(string text) 
 {
@@ -59,6 +71,7 @@ string *extractJobDescription(string filteredFileContents[11000], string filepat
         }
         ignoreFirst = true;
     }
+    fileContents.close();
     return filteredFileContents;
 }
 
@@ -78,6 +91,7 @@ string *extractKeywords(string listOfKeywords[100], string filepath)
         }
         ignoreFirst = true;
     }
+    fileContents.close();
     return listOfKeywords;
 }
 
@@ -324,6 +338,57 @@ void displayKeywords()
     }
 }
 
+void addKeywords()
+{
+    string keywordInput = "";
+    int keywordType = 0;
+    cout << "Pick a keyword: ";
+    cin >> keywordInput;
+    if(keywordInput == "")
+    {
+        cout << "Wrong input!" << endl;
+        return;
+    }
+    if(keywordInput.find(',') != string::npos)
+    {
+        cout << "You have a comma!" << endl;
+        return;
+    }
+    cout << "Types\n3. Hard Skill\n2. Tool\n1. Soft Skill\nSelect 1: ";
+    cin >> keywordType;
+    if(cin.fail())
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Please enter a number!" << endl;
+        return;
+    }
+    if(keywordType < 1)
+    {
+        cout << "Wrong input!" << endl;
+        return;
+    }
+    if(keywordType > 3)
+    {
+        cout << "Wrong input!" << endl;
+        return;
+    }
+
+    ofstream fileContents("keywords.csv", ios::app); //append mode
+    fileContents << keywordInput << ", " << keywordType << endl;
+    fileContents.close();
+
+    clearSearchContainer();
+    extractKeywords(listOfKeywords, "keywords.csv");
+    for(int i = 0; listOfKeywords[i] != ""; i++)
+    {
+        split(listOfKeywords[i], listOfSplitKeywords[i], ',');
+        listOfSplitKeywords[i][1].erase(0, 1);
+    }
+}
+
+
+
 int main()
 {
     extractJobDescription(listOfFilteredJobDescription, "job_description.csv");
@@ -430,6 +495,10 @@ int main()
         else if(choice == 7)
         {
             displayKeywords();
+        }
+        else if(choice == 8)
+        {
+            addKeywords();
         }
         else if(choice == 10)
         {
