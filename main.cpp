@@ -10,6 +10,7 @@ static string listOfFilteredAndSplitResume[11000][9] = {""};
 static string listOfFilteredJobDescription[11000] = {""};
 static string listOfFilteredResume[11000] = {""};
 static int searchContainer[11000][2];
+static double searchContainerDouble[11000][2];
 static string listOfKeywords[100] = {""};
 static string listOfSplitKeywords[100][2] = {""};
 
@@ -19,6 +20,15 @@ void clearSearchContainer()
     {
         searchContainer[i][0] = -1;
         searchContainer[i][1] = 0;
+    }
+}
+
+void clearSearchContainerDouble()
+{
+    for(int i = 0; i < 11000; i++)
+    {
+        searchContainerDouble[i][0] = -1;
+        searchContainerDouble[i][1] = 0;
     }
 }
 
@@ -116,6 +126,134 @@ string* split(string& inputText, string outputText[], char delimiter)
 
     outputText[index] = buffer;
     return outputText;
+}
+
+
+void bestMatch(int mode)
+{
+    clearSearchContainerDouble();
+
+    int totalResumes = 0;
+    for(int i = 0; listOfFilteredAndSplitResume[i][0] != ""; i++)
+    {
+        totalResumes++; //count total resume to divide by
+    }
+
+
+    for(int h = 0; listOfFilteredAndSplitJobDescription[h][0] != ""; h++) //for each job
+    {
+        double jobScore = 0; //job's total score
+        int jobWeight = 0; //job weight to divide by
+
+
+        for(int i = 0; listOfFilteredAndSplitJobDescription[h][i] != ""; i++) //across each job skill
+        {
+            for(int j = 0; listOfSplitKeywords[j][0] != ""; j++) //across each possible skill
+            {
+                if(listOfFilteredAndSplitJobDescription[h][i] == listOfSplitKeywords[j][0]) //if it's a real skill
+                {
+                    jobWeight += stoi(listOfSplitKeywords[j][1]); //job's total weight calculated here
+                    break;
+                }
+            }
+        }
+        if(jobWeight == 0)
+        {
+            jobWeight = 1;
+        }
+
+        for(int i = 0; listOfFilteredAndSplitResume[i][0] != ""; i++) //for each resume
+        {
+            int matchWeight = 0;
+
+            for(int j = 0; listOfFilteredAndSplitJobDescription[h][j] != ""; j++) //for each job skill
+            {
+                for(int k = 0; listOfFilteredAndSplitResume[i][k] != ""; k++) //for each resume skill
+                {
+                    if(listOfFilteredAndSplitJobDescription[h][j] == listOfFilteredAndSplitResume[i][k]) //get keyword weight if they match
+                    {
+                        for(int l = 0; listOfSplitKeywords[l][0] != ""; l++) //across each keyword
+                        {
+                            if(listOfFilteredAndSplitResume[i][k] == listOfSplitKeywords[l][0])
+                            {
+                                matchWeight += stoi(listOfSplitKeywords[l][1]);
+                                break;
+                            }
+                        }
+                        break; //if no match
+                    }
+                }
+            }
+
+            jobScore = jobScore + double(matchWeight)/jobWeight; //tally ratio to jobScore
+        }
+
+        jobScore = jobScore / totalResumes; //divide by total resumes
+
+        searchContainerDouble[h][0] = h; //job id is job id
+        searchContainerDouble[h][1] = jobScore; //total weighted score across resumes
+    }
+
+    int count2 = 0;
+    for(int i = 0; searchContainerDouble[i][0] != -1; i++)
+    {
+        count2 = count2 + 1;
+    }
+
+    for (int i = 0; i < count2 - 1; i++)
+    {
+        for (int j = i + 1; j < count2; j++)
+        {
+            if (searchContainerDouble[j][1] > searchContainerDouble[i][1])
+            {
+                swap(searchContainerDouble[j][0], searchContainerDouble[i][0]);
+                swap(searchContainerDouble[j][1], searchContainerDouble[i][1]);
+            }
+        }
+    }
+
+    if(mode == 1)
+    {
+        cout << "List of Best Matched Job among " << totalResumes << " resumes" << endl;
+        cout << "Search result:" << endl;
+        for(int i = 0; i < 10; i++)
+        {
+            if(searchContainerDouble[i][1] == 0)
+            {
+                cout << "No more matches" << endl;
+                break;
+            }
+            cout << i+1 << ". " << endl;
+            cout << "The job in question: " << endl;
+            cout << listOfFilteredJobDescription[int(searchContainerDouble[i][0])] << endl;
+            cout << "Score: " << searchContainerDouble[i][1]*100 << "%" << endl;
+            cout << "Job ID: " << searchContainerDouble[i][0]+2 << endl;
+        }
+    }
+    else
+    {
+        cout << "List of Worst Matched Jobs among " << totalResumes << " resumes" << endl;
+        cout << "Search result:" << endl;
+        int printedCount = 0;
+        for (int i = count2 - 1; i >= 0; i--)
+        {
+            if (searchContainerDouble[i][1] == 0)
+            {
+                continue; //skip if score 0
+            }
+            if (printedCount > 9)
+            {
+                break;
+            }
+
+            cout << printedCount + 1 << ". " << endl;
+            cout << "The job in question: " << endl;
+            cout << listOfFilteredJobDescription[int(searchContainerDouble[i][0])] << endl;
+            cout << "Score: " << searchContainerDouble[i][1] * 100 << "%" << endl;
+            cout << "Job ID: " << searchContainerDouble[i][0] + 2 << endl;
+            printedCount++;
+        }
+    }
 }
 
 void helpResumeFindJob()
@@ -728,7 +866,15 @@ int main()
             continue;
         }
 
-        if(choice == 3)
+        if(choice == 1)
+        {
+            bestMatch(1);
+        }
+        else if(choice == 2)
+        {
+            bestMatch(0);
+        }
+        else if(choice == 3)
         {
             helpResumeFindJob();
         }
