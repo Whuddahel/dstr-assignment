@@ -10,6 +10,8 @@ static string listOfFilteredAndSplitResume[11000][8] = {""};
 static string listOfFilteredJobDescription[11000] = {""};
 static string listOfFilteredResume[11000] = {""};
 static int searchContainer[11000][2];
+static string listOfKeywords[100] = {""};
+static string listOfSplitKeywords[100][2] = {""};
 
 void clearSearchContainer()
 {
@@ -58,6 +60,25 @@ string *extractJobDescription(string filteredFileContents[11000], string filepat
         ignoreFirst = true;
     }
     return filteredFileContents;
+}
+
+string *extractKeywords(string listOfKeywords[100], string filepath)
+{
+    string buffer;
+    int count = 0;
+    bool ignoreFirst = false;
+
+    ifstream fileContents(filepath);
+    while (getline(fileContents, buffer))
+    {
+        if(ignoreFirst == true)
+        {
+            listOfKeywords[count] = buffer;
+            count = count + 1;
+        }
+        ignoreFirst = true;
+    }
+    return listOfKeywords;
 }
 
 string* split(string& inputText, string outputText[], char delimiter)
@@ -283,13 +304,31 @@ void helpJobFindResume()
     }
 }
 
+void displayKeywords()
+{
+    for(int i = 0; listOfSplitKeywords[i][0] != "" ; i++)
+    {
+        cout << i+1 << ". " << listOfSplitKeywords[i][0];
+        if(listOfSplitKeywords[i][1] == "1")
+        {
+            cout << " <Soft Skill>" << endl;
+        }
+        else if(listOfSplitKeywords[i][1] == "2")
+        {
+            cout << " <Tools>" << endl;
+        }
+        else if(listOfSplitKeywords[i][1] == "3")
+        {
+            cout << " <Hard Skill>" << endl;
+        }
+    }
+}
+
 int main()
 {
-    cout << "Trimmed Job Requirements: " << endl;
     extractJobDescription(listOfFilteredJobDescription, "job_description.csv");
-    cout << "Trimmed Resume Requirements: " << endl;
     extractJobDescription(listOfFilteredResume, "resume.csv");
-
+    extractKeywords(listOfKeywords, "keywords.csv");
 
     // int maxEntries = 1;
     // for(string string : listOfFilteredResume) //find max entries
@@ -345,6 +384,11 @@ int main()
             }
         }
     }
+    for(int i = 0; listOfKeywords[i] != ""; i++)
+    {
+        split(listOfKeywords[i], listOfSplitKeywords[i], ',');
+        listOfSplitKeywords[i][1].erase(0, 1);
+    }
 
     // for(int i = 0; i < 10; i++)
     // {
@@ -382,6 +426,10 @@ int main()
         else if(choice == 4)
         {
             helpJobFindResume();
+        }
+        else if(choice == 7)
+        {
+            displayKeywords();
         }
         else if(choice == 10)
         {
