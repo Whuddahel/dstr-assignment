@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 
 using namespace std;
 
@@ -131,6 +132,8 @@ string* split(string& inputText, string outputText[], char delimiter)
 
 void bestMatch(int mode)
 {
+    auto startMatchTime = chrono::high_resolution_clock::now();
+
     clearSearchContainerDouble();
 
     int totalResumes = 0;
@@ -142,6 +145,11 @@ void bestMatch(int mode)
 
     for(int h = 0; listOfFilteredAndSplitJobDescription[h][0] != ""; h++) //for each job
     {
+        if (h % 500 == 0)
+        {
+            cout << "Resumes Processed: " << h << endl;
+        }
+
         double jobScore = 0; //job's total score
         int jobWeight = 0; //job weight to divide by
 
@@ -211,6 +219,11 @@ void bestMatch(int mode)
             }
         }
     }
+
+    auto endMatchTime = chrono::high_resolution_clock::now();
+    auto calculationTime = chrono::duration_cast<chrono::seconds>(endMatchTime - startMatchTime);
+
+    cout << "Calculation Duration: " << calculationTime.count() << " seconds " << endl;
 
     if(mode == 1)
     {
