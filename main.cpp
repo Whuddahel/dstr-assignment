@@ -20,6 +20,7 @@ void clearSearchContainer()
     }
 }
 
+
 string trimCsvContents(string text) 
 {
     int index = text.find(" in ");
@@ -88,6 +89,13 @@ void helpResumeFindJob()
     cout << "Select resume: " << endl;
     int input = 0;
     cin >> input;
+    if(cin.fail())
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Please enter a number!" << endl;
+        return;
+    }
     if(input < 2)
     {
         input = 0;
@@ -171,6 +179,17 @@ void helpResumeFindJob()
     //     cout << searchContainer[i][1] << endl;
     // }
 
+    int resumeSkillCount = 0;
+    for(int i = 0; listOfFilteredAndSplitResume[input][i] != "" ; i++) //count resume skills
+    {
+        resumeSkillCount++;
+        cout << listOfFilteredAndSplitResume[input][i] << endl;
+    }
+    if(resumeSkillCount > 8)
+    {
+        resumeSkillCount = 8;
+    }
+
     cout << "The given resume" << endl;
     cout << listOfFilteredResume[input] << endl;
     cout << "Search result:" << endl;
@@ -179,8 +198,14 @@ void helpResumeFindJob()
         cout << i+1 << ". " << endl;
         cout << "The job in question: " << endl;
         cout << listOfFilteredJobDescription[searchContainer[i][0]] << endl;
+        cout << "Score: " << searchContainer[i][1] << "/" << resumeSkillCount << endl;
         cout << "Job ID: " << searchContainer[i][0]+2 << endl;
     }
+}
+
+void helpJobFindResume()
+{
+
 }
 
 int main()
@@ -262,16 +287,31 @@ int main()
     //     }
     // }
 
-    cout << "Job Matching System\n1. Top 10 best-matched jobs (Rule-based)\n2. Top 10 worst-matched jobs (Rule-based)\n3. Filter jobs for a resume (Rule-based)\n4. Screen reumes for a job (Rule-based)\n5. Boolean search for jobs\n6. Boolean search for resumes\n7. Show all keywords\n8. Add new keyword\n9. Show invalid resumes\n10. Exit\nEnter your choice: ";
-    int choice;
-    cin >> choice;
-    cout << choice;
-    if(choice == 3)
+    while(true)
     {
-        helpResumeFindJob();
-    }
-    else if(choice == 4)
-    {
+        cout << "Job Matching System\n1. Top 10 best-matched jobs (Rule-based)\n2. Top 10 worst-matched jobs (Rule-based)\n3. Filter jobs for a resume (Rule-based)\n4. Screen reumes for a job (Rule-based)\n5. Boolean search for jobs\n6. Boolean search for resumes\n7. Show all keywords\n8. Add new keyword\n9. Show invalid resumes\n10. Exit\nEnter your choice: ";
+        int choice;
+        cin >> choice;
+        if(cin.fail())
+        {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Please enter a number!" << endl;
+            continue;
+        }
 
+        if(choice == 3)
+        {
+            helpResumeFindJob();
+        }
+        else if(choice == 10)
+        {
+            break;
+        }
+        else
+        {
+            cout << "Unimplemented Feature" << endl;
+        }
     }
+    cout << "You have exited this program" << endl;
 }
