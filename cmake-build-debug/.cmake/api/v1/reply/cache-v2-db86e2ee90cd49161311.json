@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/User/CLionProjects/DSTR_Assignment/cmake-build-debug"
+			"value" : "c:/Users/crypt/CLionProjects/dstr-assignment/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -538,22 +538,6 @@
 			"value" : ""
 		},
 		{
-			"name" : "CMAKE_EXPORT_COMPILE_COMMANDS",
-			"properties" : 
-			[
-				{
-					"name" : "ADVANCED",
-					"value" : "1"
-				},
-				{
-					"name" : "HELPSTRING",
-					"value" : "Enable/Disable output of compile commands during generation."
-				}
-			],
-			"type" : "BOOL",
-			"value" : ""
-		},
-		{
 			"name" : "CMAKE_EXTRA_GENERATOR",
 			"properties" : 
 			[
@@ -575,7 +559,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/User/CLionProjects/DSTR_Assignment/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/crypt/CLionProjects/dstr-assignment/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -587,7 +571,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "Ninja"
+			"value" : "MinGW Makefiles"
 		},
 		{
 			"name" : "CMAKE_GENERATOR_INSTANCE",
@@ -647,7 +631,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/User/CLionProjects/DSTR_Assignment"
+			"value" : "C:/Users/crypt/CLionProjects/dstr-assignment"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -682,12 +666,20 @@
 			"properties" : 
 			[
 				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
 					"name" : "HELPSTRING",
 					"value" : "make program"
 				}
 			],
 			"type" : "FILEPATH",
+<<<<<<<< HEAD:cmake-build-debug/.cmake/api/v1/reply/cache-v2-db86e2ee90cd49161311.json
 			"value" : "C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/ninja/win/x64/ninja.exe"
+========
+			"value" : "C:/PROGRA~1/JETBRA~1/CLION2~1.1/bin/mingw/bin/mingw32-make.exe"
+>>>>>>>> 4b4f1b0649dcd827cf8d616e47b68320e08c86a4:cmake-build-debug/.cmake/api/v1/reply/cache-v2-b2ee75f257dfee446b2c.json
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",
@@ -1279,7 +1271,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/User/CLionProjects/DSTR_Assignment/cmake-build-debug"
+			"value" : "C:/Users/crypt/CLionProjects/dstr-assignment/cmake-build-debug"
 		},
 		{
 			"name" : "DSTR_Assignment_IS_TOP_LEVEL",
@@ -1303,7 +1295,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/User/CLionProjects/DSTR_Assignment"
+			"value" : "C:/Users/crypt/CLionProjects/dstr-assignment"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",
