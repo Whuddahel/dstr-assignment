@@ -16,11 +16,11 @@ static string listOfKeywords[100] = {""};
 static string listOfSplitKeywords[100][2] = {""};
 
 
-static int listOfSplitKeywordsInt[100] = {0};      // integer weights corresponding to listOfSplitKeywords
-static int jobSkillCountArr[11000] = {0};          // number of skills per job
-static int resumeSkillCountArr[11000] = {0};       // number of skills per resume
-static int jobSkillId[11000][9];                   // jobSkillId[h][j] = index into listOfSplitKeywords OR -1
-static int resumeSkillId[11000][9];                // resumeSkillId[i][k] = index into listOfSplitKeywords OR -1
+static int listOfSplitKeywordsInt[100] = {0};                                   // integer weights corresponding to listOfSplitKeywords
+static int jobDescriptionSkillCount[11000] = {0};                                        // number of skills per job
+static int resumeSkillCount[11000] = {0};                                    // number of skills per resume
+static int listOfFilteredAndSplitJobDescriptionInt[11000][9];                   // jobSkillId[h][j] = index into listOfSplitKeywords OR -1
+static int listOfFilteredAndSplitResumeInt[11000][9];                                             // resumeSkillId[i][k] = index into listOfSplitKeywords OR -1
 
 
 
@@ -156,7 +156,7 @@ void setSkillIDs()
     {
         if(listOfFilteredAndSplitJobDescription[i][0] == "")
         {
-            jobSkillCountArr[i] = 0;
+            jobDescriptionSkillCount[i] = 0;
             continue;
         }
 
@@ -181,10 +181,10 @@ void setSkillIDs()
                     break;
                 }
             }
-            jobSkillId[i][skillIndex] = skillID; //-2 if not found
+            listOfFilteredAndSplitJobDescriptionInt[i][skillIndex] = skillID; //-2 if not found
             skillIndex++;
         }
-        jobSkillCountArr[i] = skillIndex; //save number of skill in this row
+        jobDescriptionSkillCount[i] = skillIndex; //save number of skill in this row
     }
 
 
@@ -192,7 +192,7 @@ void setSkillIDs()
     {
         if(listOfFilteredAndSplitResume[i][0] == "")
         {
-            resumeSkillCountArr[i] = 0;
+            resumeSkillCount[i] = 0;
             continue;
         }
 
@@ -217,10 +217,10 @@ void setSkillIDs()
                     break;
                 }
             }
-            resumeSkillId[i][skillIndex] = skillID; //-2 if not found
+            listOfFilteredAndSplitResumeInt[i][skillIndex] = skillID; //-2 if not found
             skillIndex++;
         }
-        resumeSkillCountArr[i] = skillIndex; //save number of skill in this row
+        resumeSkillCount[i] = skillIndex; //save number of skill in this row
     }
 }
 
@@ -253,39 +253,42 @@ void bestMatch(int mode)
         double jobScore = 0; //job's total score
         int jobWeight = 0; //job weight to divide by
 
-        // compute jobWeight using the jobSkillId table (only once per job)
-        for (int jj = 0; jj < jobSkillCountArr[h]; jj++)
+
+        for(int i = 0; i < jobDescriptionSkillCount[h]; i++) //for each current job's skill(to get weight)
         {
-            int kid = jobSkillId[h][jj];
-            if (kid != -1)
+            if(listOfFilteredAndSplitJobDescriptionInt[h][i] != -1)
             {
-                jobWeight += listOfSplitKeywordsInt[kid];
+                jobWeight = jobWeight + listOfSplitKeywordsInt[listOfFilteredAndSplitJobDescriptionInt[h][i]]; //skill id to get weight
             }
         }
 
         if(jobWeight == 0)
         {
-            jobWeight = 1;
+            jobWeight = 1; //prevent divide 0
         }
 
         for(int i = 0; i < totalResumes; i++) //for each resume
         {
             int matchWeight = 0;
 
-            // compare job skill ids to resume skill ids (integer compares only)
-            for (int jj = 0; jj < jobSkillCountArr[h]; jj++) //for each job skill
+            for(int j = 0; j < jobDescriptionSkillCount[h]; j++) //for each job skill
             {
-                int jobId = jobSkillId[h][jj];
-                if (jobId == -1) continue; // job skill not in keyword list
 
-                for (int kk = 0; kk < resumeSkillCountArr[i]; kk++) //for each resume skill
+                if(listOfFilteredAndSplitJobDescriptionInt[h][j] == -2)
                 {
-                    int resId = resumeSkillId[i][kk];
-                    if (resId == -1) continue;
+                    continue; //no keyword found, no point comparing
+                }
 
-                    if (jobId == resId) // ids match (same keyword)
+                for(int k = 0; k < resumeSkillCount[i]; k++) //for each resume skill
+                {
+                    if(listOfFilteredAndSplitResumeInt[i][k] == -2)
                     {
-                        matchWeight += listOfSplitKeywordsInt[jobId];
+                        continue; //no keyword found, no point comparing
+                    }
+
+                    if(listOfFilteredAndSplitJobDescriptionInt[h][j] == listOfFilteredAndSplitResumeInt[i][k]) //check if keyword id match
+                    {
+                        matchWeight = matchWeight + listOfSplitKeywordsInt[listOfFilteredAndSplitJobDescriptionInt[h][j]];
                         break; // match found for this job skill in this resume
                     }
                 }
@@ -294,7 +297,7 @@ void bestMatch(int mode)
             jobScore = jobScore + double(matchWeight)/jobWeight; //tally ratio to jobScore
         }
 
-        jobScore = jobScore / totalResumes; //divide by total resumes
+        jobScore = jobScore/totalResumes; //divide by total resumes
 
         searchContainerDouble[h][0] = h; //job id is job id
         searchContainerDouble[h][1] = jobScore; //total weighted score across resumes
@@ -346,13 +349,13 @@ void bestMatch(int mode)
         cout << "List of Worst Matched Jobs among " << totalResumes << " resumes" << endl;
         cout << "Search result:" << endl;
         int printedCount = 0;
-        for (int i = count2 - 1; i >= 0; i--)
+        for(int i = count2 - 1; i >= 0; i--)
         {
-            if (searchContainerDouble[i][1] == 0)
+            if(searchContainerDouble[i][1] == 0)
             {
                 continue;
             }
-            if (printedCount > 9)
+            if(printedCount > 9)
             {
                 break;
             }
