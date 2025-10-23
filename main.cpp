@@ -15,6 +15,15 @@ static double searchContainerDouble[11000][2];
 static string listOfKeywords[100] = {""};
 static string listOfSplitKeywords[100][2] = {""};
 
+// ---------- add these globals near your other static arrays ----------
+static int listOfSplitKeywordsInt[100] = {0};      // integer weights corresponding to listOfSplitKeywords
+static int jobSkillCountArr[11000] = {0};          // number of skills per job
+static int resumeSkillCountArr[11000] = {0};       // number of skills per resume
+static int jobSkillId[11000][9];                   // jobSkillId[h][j] = index into listOfSplitKeywords OR -1
+static int resumeSkillId[11000][9];                // resumeSkillId[i][k] = index into listOfSplitKeywords OR -1
+// -------------------------------------------------------------------
+
+
 void clearSearchContainer()
 {
     for(int i = 0; i < 11000; i++)
@@ -129,6 +138,80 @@ string* split(string& inputText, string outputText[], char delimiter)
     return outputText;
 }
 
+// Build integer tables: keyword int weights, skill counts, and per-item skill ids
+void buildSkillIdTables()
+{
+    // fill listOfSplitKeywordsInt[] once
+    for (int kk = 0; kk < 100; kk++)
+    {
+        if (listOfSplitKeywords[kk][0] == "") {
+            listOfSplitKeywordsInt[kk] = 0;
+        } else {
+            listOfSplitKeywordsInt[kk] = stoi(listOfSplitKeywords[kk][1]);
+        }
+    }
+
+    // build jobSkillCountArr and jobSkillId
+    for (int h = 0; h < 11000; h++)
+    {
+        if (listOfFilteredAndSplitJobDescription[h][0] == "") {
+            jobSkillCountArr[h] = 0;
+            continue;
+        }
+
+        int cnt = 0;
+        for (int j = 0; j < 9; j++) // your inner dimension is 9
+        {
+            string s = listOfFilteredAndSplitJobDescription[h][j];
+            if (s == "") break;
+
+            int found = -1;
+            for (int kk = 0; kk < 100; kk++)
+            {
+                if (listOfSplitKeywords[kk][0] == "") break;
+                if (listOfSplitKeywords[kk][0] == s)
+                {
+                    found = kk;
+                    break;
+                }
+            }
+            jobSkillId[h][cnt] = found; // -1 if not found
+            cnt++;
+        }
+        jobSkillCountArr[h] = cnt;
+    }
+
+    // build resumeSkillCountArr and resumeSkillId
+    for (int i = 0; i < 11000; i++)
+    {
+        if (listOfFilteredAndSplitResume[i][0] == "") {
+            resumeSkillCountArr[i] = 0;
+            continue;
+        }
+
+        int cnt = 0;
+        for (int k = 0; k < 9; k++)
+        {
+            string s = listOfFilteredAndSplitResume[i][k];
+            if (s == "") break;
+
+            int found = -1;
+            for (int kk = 0; kk < 100; kk++)
+            {
+                if (listOfSplitKeywords[kk][0] == "") break;
+                if (listOfSplitKeywords[kk][0] == s)
+                {
+                    found = kk;
+                    break;
+                }
+            }
+            resumeSkillId[i][cnt] = found; // -1 if not found
+            cnt++;
+        }
+        resumeSkillCountArr[i] = cnt;
+    }
+}
+
 
 void bestMatch(int mode)
 {
@@ -142,8 +225,13 @@ void bestMatch(int mode)
         totalResumes++; //count total resume to divide by
     }
 
+    int totalJobs = 0;
+    for(int i = 0; listOfFilteredAndSplitJobDescription[i][0] != ""; i++)
+    {
+        totalJobs++;
+    }
 
-    for(int h = 0; listOfFilteredAndSplitJobDescription[h][0] != ""; h++) //for each job
+    for(int h = 0; h < totalJobs; h++) //for each job
     {
         if (h % 500 == 0)
         {
@@ -153,42 +241,40 @@ void bestMatch(int mode)
         double jobScore = 0; //job's total score
         int jobWeight = 0; //job weight to divide by
 
-
-        for(int i = 0; listOfFilteredAndSplitJobDescription[h][i] != ""; i++) //across each job skill
+        // compute jobWeight using the jobSkillId table (only once per job)
+        for (int jj = 0; jj < jobSkillCountArr[h]; jj++)
         {
-            for(int j = 0; listOfSplitKeywords[j][0] != ""; j++) //across each possible skill
+            int kid = jobSkillId[h][jj];
+            if (kid != -1)
             {
-                if(listOfFilteredAndSplitJobDescription[h][i] == listOfSplitKeywords[j][0]) //if it's a real skill
-                {
-                    jobWeight += stoi(listOfSplitKeywords[j][1]); //job's total weight calculated here
-                    break;
-                }
+                jobWeight += listOfSplitKeywordsInt[kid];
             }
         }
+
         if(jobWeight == 0)
         {
             jobWeight = 1;
         }
 
-        for(int i = 0; listOfFilteredAndSplitResume[i][0] != ""; i++) //for each resume
+        for(int i = 0; i < totalResumes; i++) //for each resume
         {
             int matchWeight = 0;
 
-            for(int j = 0; listOfFilteredAndSplitJobDescription[h][j] != ""; j++) //for each job skill
+            // compare job skill ids to resume skill ids (integer compares only)
+            for (int jj = 0; jj < jobSkillCountArr[h]; jj++) //for each job skill
             {
-                for(int k = 0; listOfFilteredAndSplitResume[i][k] != ""; k++) //for each resume skill
+                int jobId = jobSkillId[h][jj];
+                if (jobId == -1) continue; // job skill not in keyword list
+
+                for (int kk = 0; kk < resumeSkillCountArr[i]; kk++) //for each resume skill
                 {
-                    if(listOfFilteredAndSplitJobDescription[h][j] == listOfFilteredAndSplitResume[i][k]) //get keyword weight if they match
+                    int resId = resumeSkillId[i][kk];
+                    if (resId == -1) continue;
+
+                    if (jobId == resId) // ids match (same keyword)
                     {
-                        for(int l = 0; listOfSplitKeywords[l][0] != ""; l++) //across each keyword
-                        {
-                            if(listOfFilteredAndSplitResume[i][k] == listOfSplitKeywords[l][0])
-                            {
-                                matchWeight += stoi(listOfSplitKeywords[l][1]);
-                                break;
-                            }
-                        }
-                        break; //if no match
+                        matchWeight += listOfSplitKeywordsInt[jobId];
+                        break; // match found for this job skill in this resume
                     }
                 }
             }
@@ -252,7 +338,7 @@ void bestMatch(int mode)
         {
             if (searchContainerDouble[i][1] == 0)
             {
-                continue; //skip if score 0
+                continue;
             }
             if (printedCount > 9)
             {
@@ -268,6 +354,7 @@ void bestMatch(int mode)
         }
     }
 }
+
 
 void helpResumeFindJob()
 {
@@ -850,6 +937,8 @@ int main()
         listOfSplitKeywords[i][1].erase(0, 1);
     }
 
+    buildSkillIdTables(); // <-- add this line here, once after splitting
+
     // for(int i = 0; i < 10; i++)
     // {
     //     cout << listOfFilteredJobDescription[i] << endl;
@@ -868,7 +957,7 @@ int main()
 
     while(true)
     {
-        cout << "Job Matching System\n1. Top 10 best-matched jobs (Rule-based)\n2. Top 10 worst-matched jobs (Rule-based)\n3. Filter jobs for a resume (Rule-based)\n4. Screen reumes for a job (Rule-based)\n5. Boolean search for jobs\n6. Boolean search for resumes\n7. Show all keywords\n8. Add new keyword\n9. Show invalid resumes\n10. Exit\nEnter your choice: ";
+        cout << "Job Matching System\n1. Top 10 best-matched jobs (Weighted)\n2. Top 10 worst-matched jobs (Weighted)\n3. Filter jobs for a resume (Rule-based)\n4. Screen reumes for a job (Rule-based)\n5. Boolean search for jobs (Rule-based)\n6. Boolean search for resumes (Rule-based)\n7. Show all keywords\n8. Add new keyword\n9. Show invalid resumes\n10. Exit\nEnter your choice: ";
         int choice;
         cin >> choice;
         if(cin.fail())
