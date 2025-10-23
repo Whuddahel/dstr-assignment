@@ -16,11 +16,11 @@ static string listOfKeywords[100] = {""};
 static string listOfSplitKeywords[100][2] = {""};
 
 
-static int listOfSplitKeywordsInt[100] = {0};                                   // integer weights corresponding to listOfSplitKeywords
-static int jobDescriptionSkillCount[11000] = {0};                                        // number of skills per job
-static int resumeSkillCount[11000] = {0};                                    // number of skills per resume
-static int listOfFilteredAndSplitJobDescriptionInt[11000][9];                   // jobSkillId[h][j] = index into listOfSplitKeywords OR -1
-static int listOfFilteredAndSplitResumeInt[11000][9];                                             // resumeSkillId[i][k] = index into listOfSplitKeywords OR -1
+static int listOfSplitKeywordsInt[100] = {0};
+static int jobDescriptionSkillCount[11000] = {0};
+static int resumeSkillCount[11000] = {0};
+static int listOfFilteredAndSplitJobDescriptionInt[11000][9];
+static int listOfFilteredAndSplitResumeInt[11000][9];
 
 
 
