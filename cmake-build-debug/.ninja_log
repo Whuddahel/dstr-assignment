@@ -1,6 +1,13 @@
 # ninja log v6
-9	571	7825168233720349	CMakeFiles/DSTR_Assignment.dir/main.cpp.obj	6438b4e7db7de2b5
-572	695	7825168239345931	DSTR_Assignment.exe	41f6e83ceb4b31ee
-8	654	7828982644559440	build.ninja	deaaab0e246e1b2
 3	882	7828982645009427	CMakeFiles/DSTR_Assignment.dir/main.cpp.obj	6438b4e7db7de2b5
 883	1101	7828982653817480	DSTR_Assignment.exe	41f6e83ceb4b31ee
+8	654	7828984162415130	build.ninja	deaaab0e246e1b2
+2	525	7828984162415130	build.ninja	deaaab0e246e1b2
+2	571	7828984162675100	CMakeFiles/DSTR_Assignment.dir/main.cpp.obj	6438b4e7db7de2b5
+571	739	7828984168366596	DSTR_Assignment.exe	41f6e83ceb4b31ee
+8	738	7828997890771170	CMakeFiles/DSTR_Assignment.dir/main.cpp.obj	6438b4e7db7de2b5
+738	1022	7828997898071345	DSTR_Assignment.exe	41f6e83ceb4b31ee
+5	612	7829001437670429	CMakeFiles/DSTR_Assignment.dir/main.cpp.obj	6438b4e7db7de2b5
+613	793	7829001443742591	DSTR_Assignment.exe	41f6e83ceb4b31ee
+7	599	7829018963677393	CMakeFiles/DSTR_Assignment.dir/main.cpp.obj	6438b4e7db7de2b5
+599	770	7829018969595779	DSTR_Assignment.exe	41f6e83ceb4b31ee

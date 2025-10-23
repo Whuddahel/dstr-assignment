@@ -15,13 +15,13 @@ static double searchContainerDouble[11000][2];
 static string listOfKeywords[100] = {""};
 static string listOfSplitKeywords[100][2] = {""};
 
-// ---------- add these globals near your other static arrays ----------
+
 static int listOfSplitKeywordsInt[100] = {0};      // integer weights corresponding to listOfSplitKeywords
 static int jobSkillCountArr[11000] = {0};          // number of skills per job
 static int resumeSkillCountArr[11000] = {0};       // number of skills per resume
 static int jobSkillId[11000][9];                   // jobSkillId[h][j] = index into listOfSplitKeywords OR -1
 static int resumeSkillId[11000][9];                // resumeSkillId[i][k] = index into listOfSplitKeywords OR -1
-// -------------------------------------------------------------------
+
 
 
 void clearSearchContainer()
@@ -138,77 +138,89 @@ string* split(string& inputText, string outputText[], char delimiter)
     return outputText;
 }
 
-// Build integer tables: keyword int weights, skill counts, and per-item skill ids
-void buildSkillIdTables()
+void setSkillIDs()
 {
-    // fill listOfSplitKeywordsInt[] once
-    for (int kk = 0; kk < 100; kk++)
+    for(int i = 0; i < 100; i++) //for each slot in keyword
     {
-        if (listOfSplitKeywords[kk][0] == "") {
-            listOfSplitKeywordsInt[kk] = 0;
-        } else {
-            listOfSplitKeywordsInt[kk] = stoi(listOfSplitKeywords[kk][1]);
+        if(listOfSplitKeywords[i][0] == "")
+        {
+            listOfSplitKeywordsInt[i] = 0;
+        }
+        else
+        {
+            listOfSplitKeywordsInt[i] = stoi(listOfSplitKeywords[i][1]); //index num serves as ID
         }
     }
 
-    // build jobSkillCountArr and jobSkillId
-    for (int h = 0; h < 11000; h++)
+    for(int i = 0; i < 11000; i++) //for each slot on job
     {
-        if (listOfFilteredAndSplitJobDescription[h][0] == "") {
-            jobSkillCountArr[h] = 0;
+        if(listOfFilteredAndSplitJobDescription[i][0] == "")
+        {
+            jobSkillCountArr[i] = 0;
             continue;
         }
 
-        int cnt = 0;
-        for (int j = 0; j < 9; j++) // your inner dimension is 9
+        int skillIndex = 0;
+        for(int j = 0; j < 9; j++) //for each slot in job skills
         {
-            string s = listOfFilteredAndSplitJobDescription[h][j];
-            if (s == "") break;
-
-            int found = -1;
-            for (int kk = 0; kk < 100; kk++)
+            if(listOfFilteredAndSplitJobDescription[i][j] == "")
             {
-                if (listOfSplitKeywords[kk][0] == "") break;
-                if (listOfSplitKeywords[kk][0] == s)
+                break; //leave this value at -1
+            }
+
+            int skillID = -2; //differ from sentinel value of -1
+            for(int k = 0; k < 100; k++) //for each possible keyword
+            {
+                if (listOfSplitKeywords[k][0] == "")
                 {
-                    found = kk;
+                    break;
+                }
+                if (listOfSplitKeywords[k][0] == listOfFilteredAndSplitJobDescription[i][j])
+                {
+                    skillID = k;
                     break;
                 }
             }
-            jobSkillId[h][cnt] = found; // -1 if not found
-            cnt++;
+            jobSkillId[i][skillIndex] = skillID; //-2 if not found
+            skillIndex++;
         }
-        jobSkillCountArr[h] = cnt;
+        jobSkillCountArr[i] = skillIndex; //save number of skill in this row
     }
 
-    // build resumeSkillCountArr and resumeSkillId
-    for (int i = 0; i < 11000; i++)
+
+    for(int i = 0; i < 11000; i++) //for each slot on resume
     {
-        if (listOfFilteredAndSplitResume[i][0] == "") {
+        if(listOfFilteredAndSplitResume[i][0] == "")
+        {
             resumeSkillCountArr[i] = 0;
             continue;
         }
 
-        int cnt = 0;
-        for (int k = 0; k < 9; k++)
+        int skillIndex = 0;
+        for(int j = 0; j < 9; j++) //for each slot in resume skills
         {
-            string s = listOfFilteredAndSplitResume[i][k];
-            if (s == "") break;
-
-            int found = -1;
-            for (int kk = 0; kk < 100; kk++)
+            if(listOfFilteredAndSplitResume[i][j] == "")
             {
-                if (listOfSplitKeywords[kk][0] == "") break;
-                if (listOfSplitKeywords[kk][0] == s)
+                break; //leave this value at -1
+            }
+
+            int skillID = -2; //differ from sentinel value of -1
+            for(int k = 0; k < 100; k++) //for each possible keyword
+            {
+                if(listOfSplitKeywords[k][0] == "")
                 {
-                    found = kk;
+                    break;
+                }
+                if(listOfSplitKeywords[k][0] == listOfFilteredAndSplitResume[i][j])
+                {
+                    skillID = k;
                     break;
                 }
             }
-            resumeSkillId[i][cnt] = found; // -1 if not found
-            cnt++;
+            resumeSkillId[i][skillIndex] = skillID; //-2 if not found
+            skillIndex++;
         }
-        resumeSkillCountArr[i] = cnt;
+        resumeSkillCountArr[i] = skillIndex; //save number of skill in this row
     }
 }
 
@@ -937,7 +949,7 @@ int main()
         listOfSplitKeywords[i][1].erase(0, 1);
     }
 
-    buildSkillIdTables(); // <-- add this line here, once after splitting
+    setSkillIDs();
 
     // for(int i = 0; i < 10; i++)
     // {

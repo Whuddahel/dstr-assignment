@@ -4,7 +4,7 @@
 		"generator" : 
 		{
 			"multiConfig" : false,
-			"name" : "MinGW Makefiles"
+			"name" : "Ninja"
 		},
 		"paths" : 
 		{
@@ -26,7 +26,7 @@
 	"objects" : 
 	[
 		{
-			"jsonFile" : "codemodel-v2-39f1f3696f14d3e26ab7.json",
+			"jsonFile" : "codemodel-v2-68923d9c4dcdb98d1f35.json",
 			"kind" : "codemodel",
 			"version" : 
 			{
@@ -35,11 +35,7 @@
 			}
 		},
 		{
-<<<<<<<< HEAD:cmake-build-debug/.cmake/api/v1/reply/index-2025-10-23T04-51-04-0489.json
 			"jsonFile" : "cache-v2-db86e2ee90cd49161311.json",
-========
-			"jsonFile" : "cache-v2-b2ee75f257dfee446b2c.json",
->>>>>>>> 4b4f1b0649dcd827cf8d616e47b68320e08c86a4:cmake-build-debug/.cmake/api/v1/reply/index-2025-10-22T03-23-12-0293.json
 			"kind" : "cache",
 			"version" : 
 			{
@@ -48,11 +44,7 @@
 			}
 		},
 		{
-<<<<<<<< HEAD:cmake-build-debug/.cmake/api/v1/reply/index-2025-10-23T04-51-04-0489.json
 			"jsonFile" : "cmakeFiles-v1-3c2c9f059a4cee15f700.json",
-========
-			"jsonFile" : "cmakeFiles-v1-b9975c5143604c874e4c.json",
->>>>>>>> 4b4f1b0649dcd827cf8d616e47b68320e08c86a4:cmake-build-debug/.cmake/api/v1/reply/index-2025-10-22T03-23-12-0293.json
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
@@ -74,11 +66,7 @@
 	{
 		"cache-v2" : 
 		{
-<<<<<<<< HEAD:cmake-build-debug/.cmake/api/v1/reply/index-2025-10-23T04-51-04-0489.json
 			"jsonFile" : "cache-v2-db86e2ee90cd49161311.json",
-========
-			"jsonFile" : "cache-v2-b2ee75f257dfee446b2c.json",
->>>>>>>> 4b4f1b0649dcd827cf8d616e47b68320e08c86a4:cmake-build-debug/.cmake/api/v1/reply/index-2025-10-22T03-23-12-0293.json
 			"kind" : "cache",
 			"version" : 
 			{
@@ -88,11 +76,7 @@
 		},
 		"cmakeFiles-v1" : 
 		{
-<<<<<<<< HEAD:cmake-build-debug/.cmake/api/v1/reply/index-2025-10-23T04-51-04-0489.json
 			"jsonFile" : "cmakeFiles-v1-3c2c9f059a4cee15f700.json",
-========
-			"jsonFile" : "cmakeFiles-v1-b9975c5143604c874e4c.json",
->>>>>>>> 4b4f1b0649dcd827cf8d616e47b68320e08c86a4:cmake-build-debug/.cmake/api/v1/reply/index-2025-10-22T03-23-12-0293.json
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
@@ -102,7 +86,7 @@
 		},
 		"codemodel-v2" : 
 		{
-			"jsonFile" : "codemodel-v2-39f1f3696f14d3e26ab7.json",
+			"jsonFile" : "codemodel-v2-68923d9c4dcdb98d1f35.json",
 			"kind" : "codemodel",
 			"version" : 
 			{
